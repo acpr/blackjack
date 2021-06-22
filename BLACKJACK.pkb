@@ -1,7 +1,7 @@
 create or replace package body blackjack
 AS
 
-    type a_card IS record (
+    type a_card is record (
         suit varchar2(10),
         value varchar2(10),
         points integer,
@@ -107,5 +107,6 @@ AS
         shuffle_deck(rc=>rc);
         deal(deck=>rc,my_hand=>my_hand,marits_hand=>marits_hand);
         spool_result(my_hand=>my_hand,marits_hand=>marits_hand);
+        close rc;
     END;
 END;
