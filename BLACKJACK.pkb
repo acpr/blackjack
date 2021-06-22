@@ -1,5 +1,16 @@
-create or replace PACKAGE BODY           blackjack
+create or replace package body blackjack
 AS
+
+    type a_card IS record (
+        suit varchar2(10),
+        value varchar2(10),
+        points integer,
+        total integer
+        );
+    this_card  a_card;
+    type cards is table of a_card index by binary_integer;
+
+
     procedure shuffle_deck (rc  out sys_refcursor) is
     begin
         open rc for 
@@ -38,16 +49,16 @@ AS
         end if;  
     end;
     
-    function get_winner(my_score in integer,marits_score in integer) return varchar2 is
+    function get_winner(my_score in integer,marits_score in integer)  return varchar2 is
     begin
         if my_score>21 then
             return 'Marit';
         elsif marits_score>21 then
-            return 'Me';
+            return 'Anthony';
         elsif marits_score>my_score then
             return 'Marit';
         elsif marits_score<my_score then
-            return 'Me';
+            return 'Anthony';
         else
             return 'Unknown '||my_score||' / '||marits_score;
         end if;
@@ -67,8 +78,8 @@ AS
     begin
         dbms_output.put_line('Winner: '||get_winner(my_hand(my_hand.count).total,marits_hand(marits_hand.count).total));
         dbms_output.put_line ('');
-        show_hand(owner_label=>rpad('My hand',12,' '), hand=>my_hand);
-        show_hand(owner_label=>rpad('Marit''s hand',12,' '), hand=>marits_hand);
+        show_hand(owner_label=>rpad('Anthony''s hand',15,' '), hand=>my_hand);
+        show_hand(owner_label=>rpad('Marit''s hand',15,' '), hand=>marits_hand);
     end;    
     
     procedure deal(deck in out sys_refcursor,my_hand out cards,marits_hand out cards) is
@@ -86,7 +97,7 @@ AS
         end loop;        
     end;
     
-    PROCEDURE init
+    PROCEDURE play
     IS
         rc sys_refcursor;
         my_hand cards;
